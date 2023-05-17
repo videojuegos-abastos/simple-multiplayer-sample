@@ -21,7 +21,6 @@ public class Player : NetworkBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        print("HOLA");
         const float FACTOR = .1f;
         if (other.TryGetComponent<Food>(out Food food))
         {
