@@ -3,10 +3,8 @@ using UnityEngine.Events;
 
 public class PointerManager : MonoBehaviour
 {
-	[SerializeField]
-	GameObject pointer;
-
-    UnityEvent<Vector3> onPositionSelected = new UnityEvent<Vector3>();
+	[SerializeField] GameObject pointer;
+    [field: SerializeField] public UnityEvent<Vector3> onPositionSelected { get; private set; } = new UnityEvent<Vector3>();
 
 	bool _spawned = false;
 	bool spawned
