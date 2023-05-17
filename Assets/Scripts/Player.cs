@@ -3,15 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.Netcode;
+using TMPro;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class Player : NetworkBehaviour
 {
-    float size;
+    [SerializeField] TextMeshProUGUI TMP;
+    
+    NetworkVariable<int> balls = new NetworkVariable<int>(value: 0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
     NavMeshAgent agent;
-    void Start()
+    public override void OnNetworkSpawn()
     {
         agent = GetComponent<NavMeshAgent>();
+
+
+        balls.OnValueChanged += OnBallsValueChanged;
+
+
+        if (IsOwner)
+        {
+            FindObjectOfType<PointerManager>().onPositionSelected.AddListener( MoveTo );
+        }
+    }
+
+    void OnBallsValueChanged(int oldValue, int newValue)
+    {
+        TMP.text = newValue.ToString();
     }
 
     public void MoveTo(Vector3 position)
@@ -26,7 +44,11 @@ public class Player : NetworkBehaviour
         {
             transform.localScale += Vector3.up * food.transform.localScale.magnitude * FACTOR;
             Destroy(food.gameObject);
+
+            if (IsOwner)
+            {
+                balls.Value += 1;
+            }
         }
     }
-
 }
