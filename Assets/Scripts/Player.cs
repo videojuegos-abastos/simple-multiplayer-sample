@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Unity.Netcode;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
     NavMeshAgent agent;
     void Start()
