@@ -7,6 +7,7 @@ using Unity.Netcode;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Player : NetworkBehaviour
 {
+    float size;
     NavMeshAgent agent;
     void Start()
     {
@@ -16,6 +17,17 @@ public class Player : NetworkBehaviour
     public void MoveTo(Vector3 position)
     {
         agent.SetDestination(position);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        print("HOLA");
+        const float FACTOR = .1f;
+        if (other.TryGetComponent<Food>(out Food food))
+        {
+            transform.localScale += Vector3.up * food.transform.localScale.magnitude * FACTOR;
+            Destroy(food.gameObject);
+        }
     }
 
 }
