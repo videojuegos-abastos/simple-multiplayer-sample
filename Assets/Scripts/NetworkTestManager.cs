@@ -13,4 +13,9 @@ public class NetworkTestManager : MonoBehaviour
     {
         NetworkManager.Singleton.StartHost();
     }
+
+    public void StartServer()
+    {
+        NetworkManager.Singleton.StartServer();
+    }
 }

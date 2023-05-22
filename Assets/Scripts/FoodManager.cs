@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class FoodManager : MonoBehaviour
+public class FoodManager : NetworkBehaviour
 {
 
     [SerializeField] Vector3Int center = Vector3Int.zero;
@@ -12,8 +13,14 @@ public class FoodManager : MonoBehaviour
     [SerializeField] GameObject food;
 
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsServer)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         StartCoroutine(nameof(SpawnFood));
     }
 
@@ -25,6 +32,8 @@ public class FoodManager : MonoBehaviour
             float scale = Random.Range(minMaxFoodScale.x, minMaxFoodScale.y);
             GameObject instance = Instantiate(food, center + position, Quaternion.identity);
             instance.transform.localScale *= scale;
+
+            instance.GetComponent<NetworkObject>().Spawn();
 
             yield return new WaitForSeconds(waitTime);
         }
